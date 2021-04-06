@@ -29,24 +29,24 @@ def beforeRequest():
         return {'errorcode': '10001', 'message': 'token expire error'}
 
 
-@app.route('/apiv1.0/login')
+@app.route('/apiv1.0/login', methods=['get', 'post'])
 def login():
-    if request.args.get('username') is None or request.args.get('id') is None:
+    if request.values.get('username') is None or request.values.get('password') is None:
         return {'errorcode': '10002', 'message': 'requie user and pass'}
 
-    username = request.args.get('username')
-    id = int(request.args.get('id'))
+    username = request.values.get('username')
+    password = request.values.get('password')
 
-    if username == 'tom' and id == 1:
-        token = generate_token(id, 60 * 30)  # 秒
-        return {'username': 'tom', 'id': 1, 'token': token}
+    if username == 'tom' and password == '123':
+        token = generate_token(password, 60 * 60)  # 秒
+        return {'username': 'tom', 'password': '123', 'token': token}
     else:
         return {'errorcode': '10003', 'message': 'login error'}
 
 
-def generate_token(id=1, expiration=60 * 10):  # 生成token
+def generate_token(password='123', expiration=60 * 10):  # 生成token
     s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-    token = s.dumps({'id': id}).decode('ascii')
+    token = s.dumps({'password': password}).decode('ascii')
     return token
 
 
@@ -59,7 +59,7 @@ def verify_auth_token(token):  # token验证
     except BadSignature:
         return None  # invalid token
 
-    return data['id']
+    return data['password']
 
 
 if __name__ == '__main__':
