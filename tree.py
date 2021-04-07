@@ -83,11 +83,13 @@ class menue:
 
 
 
-class tree: #树形菜单
+class tree:
+    """树形菜单"""
     def __init__(self):
         pass
 
-    def get_root_department(self): #根
+    def get_root_department(self):
+        """根"""
         mysqlService = MySQLService()
         root_list = []
         data = mysqlService.get_root_department()
@@ -100,7 +102,8 @@ class tree: #树形菜单
 
         return root_list
 
-    def get_sub_department(self, departmentid=0):   #叶子
+    def get_sub_department(self, departmentid=0):
+        """叶子"""
         mysqlService = MySQLService()
         sub_list = []
         data = mysqlService.get_sub_department(departmentid=departmentid)

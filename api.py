@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Blueprint
 from flask import current_app, request  # 在蓝本中使用配置文件引入当前环境
 from MySQL import MySQLService
@@ -10,7 +11,7 @@ api = Blueprint('api', __name__, url_prefix='/apiv1.0')
 
 @api.route('/myfun1', methods=['get', 'post'])
 def myfun1():
-    print('~~~~~~%s,%s' % (current_app.config['NAME'], current_app.config['TELEPHONE']))
+    print('~~~~~~%s,%s' % (current_app.config['USER'], current_app.config['USER']))
     return '@@@@myfun1'
 
 

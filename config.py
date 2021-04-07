@@ -1,11 +1,6 @@
-# class Config(object):
-#     def __init__(self):
-#         pass
-#     NAME = 'zhangsan'
-#     AGE = 80
-#     TELEPHONE = '1233211233'
-
-
-NAME = 'zhangsan'
-AGE = 80
-TELEPHONE = '1233211233'
+# PostgreSQL
+DATABASE = 'jc'
+USER = 'postgres'
+PASSWORD = 'postgres'
+HOST = '127.0.0.1'
+PORT = '5432'

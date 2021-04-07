@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, session, send_from_directory
+from flask import Flask, render_template, session, send_from_directory, jsonify
 from flask import request
 from flask_cors import *
-
+from Token import Token
+from PostgreSQL import PostgreSQLService
+import json
 from api import api  # 导入蓝本的文件
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def beforeRequest():
 
     if token is None:
         return {'errorcode': '10000', 'message': 'token none error'}
-    if verify_auth_token(token) is None:  # return 有值则终止后面程序的执行. return后面无值则继续向后执行
+    if Token().verify_auth_token(token) is None:  # return 有值则终止后面程序的执行. return后面无值则继续向后执行
         return {'errorcode': '10001', 'message': 'token expire error'}
 
 
@@ -37,29 +38,17 @@ def login():
     username = request.values.get('username')
     password = request.values.get('password')
 
-    if username == 'tom' and password == '123':
-        token = generate_token(password, 60 * 60)  # 秒
-        return {'username': 'tom', 'password': '123', 'token': token}
+    data = PostgreSQLService().get_user_by_name_pass(username, password)
+    if data:
+        user_list = eval(json.dumps(data))  # 将PG返回字典转列表
+        id = user_list[0].get('id')
+
+        token = Token().generate_token(id, 60 * 60)  # 秒
+        user_list[0]['token'] = token
+
+        return jsonify(user_list)
     else:
         return {'errorcode': '10003', 'message': 'login error'}
-
-
-def generate_token(password='123', expiration=60 * 10):  # 生成token
-    s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-    token = s.dumps({'password': password}).decode('ascii')
-    return token
-
-
-def verify_auth_token(token):  # token验证
-    s = Serializer(app.config['SECRET_KEY'])
-    try:
-        data = s.loads(token)
-    except SignatureExpired:
-        return None  # valid token,but expired
-    except BadSignature:
-        return None  # invalid token
-
-    return data['password']
 
 
 if __name__ == '__main__':
