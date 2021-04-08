@@ -46,9 +46,9 @@ class PostgreSQLService(object):
             connection = postgreSQL.getConnection()
             cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)  # 字典
 
-            cursor.execute('''select tb_device_type.name as type,tb_device.id,tb_device.number,tb_device.name,tb_device.project,tb_device.person,tb_device.state,tb_device.locate
-                              from tb_device_type,tb_device
-                              where tb_device_type.device_type_id=tb_device.device_type_id
+            cursor.execute('''select tb_device_type.name as type,tb_device.id,tb_device.number,tb_device.name,tb_project.projectname,tb_user.username,tb_device.state,tb_device.locate
+                              from tb_device_type,tb_device,tb_project,tb_user
+                              where tb_device_type.id=tb_device.devicetypeid and tb_device.projectid=tb_project.id and tb_device.userid=tb_user.id
                               limit %d OFFSET %d''' %(pageSize, (currentPage-1)*pageSize))
             data = cursor.fetchall()
         except Exception as error:
