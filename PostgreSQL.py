@@ -57,3 +57,20 @@ class PostgreSQLService(object):
             postgreSQL.closeConnection(connection)
 
         return data
+
+    def get_total_record_ether_table(self, table_name, where_sql):
+        """通用 取得总记录数据,根据传过来的表名，where语句"""
+        postgreSQL = PostgreSQL()
+
+        try:
+            connection = postgreSQL.getConnection()
+            cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)  # 字典
+
+            cursor.execute(''' select count(*) as total_record from %s %s ''' %(table_name, where_sql))
+            data = cursor.fetchall()
+        except Exception as error:
+            print(error.with_traceback())
+        finally:
+            postgreSQL.closeConnection(connection)
+
+        return data

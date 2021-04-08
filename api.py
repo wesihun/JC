@@ -51,3 +51,12 @@ def get_device():
 
     postgreSQLService = PostgreSQLService()
     return jsonify(postgreSQLService.get_device_by_page(int(pageSize), int(currentPage)))
+
+
+@api.route('/get_total_record', methods=['get', 'post'])
+def get_total_record():
+    """取得总记录数，根据表明，where条件"""
+    where_sql = ''
+    table_name = 'tb_device'
+    postgreSQLService = PostgreSQLService()
+    return jsonify(postgreSQLService.get_total_record_ether_table(table_name, where_sql))
