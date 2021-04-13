@@ -5,9 +5,11 @@ from MySQL import MySQLService
 from flask import jsonify
 from PostgreSQL import PostgreSQLService
 from tree import tree
+from flask_httpauth import HTTPTokenAuth
 
 api = Blueprint('api', __name__, url_prefix='/apiv1.0')
 
+auth = HTTPTokenAuth(scheme='Bearer')
 
 @api.route('/myfun1', methods=['get', 'post'])
 def myfun1():
