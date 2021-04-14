@@ -77,4 +77,4 @@ def auth_error_todo():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=32768)
+    app.run(debug=True, host='0.0.0.0', port=32768, threaded=True)
